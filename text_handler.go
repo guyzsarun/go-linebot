@@ -20,6 +20,15 @@ func text_handler(event linebot.Event) {
 		var return_msg string
 		if strings.Contains(message.Text, "choose") {
 			return_msg = random_text(message.Text)
+		} else if strings.Contains(message.Text, "profile") {
+			res, _ := bot.GetProfile(userID).Do()
+			user_info := User_info{
+				res.UserID,
+				res.DisplayName,
+				res.Language,
+				res.PictureURL,
+				res.StatusMessage}
+			return_msg = user_info.print_info()
 		} else {
 			return_msg = message.Text
 		}
