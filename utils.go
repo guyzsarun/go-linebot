@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -16,4 +17,13 @@ func load_dev_env() (string, string) {
 	LINE_API := os.Getenv("LINE_API")
 	LINE_SECRET := os.Getenv("LINE_SECRET")
 	return LINE_API, LINE_SECRET
+}
+
+func getPort() string {
+	var port = os.Getenv("PORT") // ----> (A)
+	if port == "" {
+		port = "8080"
+		fmt.Println("No Port In Heroku" + port)
+	}
+	return ":" + port // ----> (B)
 }

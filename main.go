@@ -27,5 +27,5 @@ func main() {
 	log.Println("Bot:", bot, " err:", err)
 
 	r := setupRouter()
-	r.Run()
+	r.Run(getPort())
 }
