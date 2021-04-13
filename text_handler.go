@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/line/line-bot-sdk-go/linebot"
 )
@@ -16,7 +17,13 @@ func text_handler(event linebot.Event) {
 
 	switch message := event.Message.(type) {
 	case *linebot.TextMessage:
-		if _, err = bot.ReplyMessage(replyToken, linebot.NewTextMessage(message.Text)).Do(); err != nil {
+		var return_msg string
+		if strings.Contains(message.Text, "choose") {
+			return_msg = random_text(message.Text)
+		} else {
+			return_msg = message.Text
+		}
+		if _, err = bot.ReplyMessage(replyToken, linebot.NewTextMessage(return_msg)).Do(); err != nil {
 			log.Print(err)
 		}
 	case *linebot.StickerMessage:
