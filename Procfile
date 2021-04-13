@@ -1,1 +1,1 @@
-web: [go-linebot]
+web: go-linebot
