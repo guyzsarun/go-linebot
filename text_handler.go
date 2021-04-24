@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -39,7 +39,7 @@ func text_handler(event linebot.Event) {
 				return_msg = "Cannot get miner status"
 			}
 			defer resp.Body.Close()
-			body, _ := io.ReadAll(resp.Body)
+			body, _ := ioutil.ReadAll(resp.Body)
 			miner_status := Miner{}
 			json.Unmarshal(body, &miner_status)
 			return_msg = "Miner :" + wallet + "\n" + miner_status.print_info()
