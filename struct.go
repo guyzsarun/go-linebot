@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"time"
 )
 
 type User_info struct {
@@ -13,21 +15,23 @@ type User_info struct {
 }
 
 type Miner struct {
-	WorkerOnline    int    `json:"workersOnline"`
-	CurrentHashRate int    `json:"currentHashrate"`
-	CurrentLuck     string `json:"currentluck"`
-	LastShare       Worker `json:"workers"`
+	Status string `json:"status"`
+	Data   Data   `json:"data"`
 }
 
-type Worker struct {
-	WorkerStatus WorkerStatus `json:"0"`
+type Data struct {
+	LastSeen         int64   `json:"lastSeen"`
+	HashRate         float32 `json:"currentHashrate"`
+	ReportedHashRate float32 `json:"reportedHashrate"`
+	ValidShare       int     `json:"validShares"`
+	StaleShares      int     `json:"staleShares"`
 }
 
-type WorkerStatus struct {
-	LastBeat  int  `json:"lastBeat"`
-	HashRate  int  `json:"hr"`
-	Offline   bool `json:"offline`
-	HashRate2 int  `json:"hr2`
+type ReturnStruct struct {
+	MinerStatus      string
+	Lastseen         string
+	CurrentHashrate  string
+	ReportedHashrate string
 }
 
 func PrintBeautyStruct(value interface{}) string {
@@ -39,6 +43,15 @@ func (user User_info) print_info() string {
 	return PrintBeautyStruct(user)
 }
 
-func (miner Miner) print_info() string {
-	return PrintBeautyStruct(miner)
+func (returnStruct ReturnStruct) print_info() string {
+	return PrintBeautyStruct(returnStruct)
+}
+
+func (miner *Miner) postProcess() ReturnStruct {
+	returnStruct := ReturnStruct{}
+	returnStruct.Lastseen = fmt.Sprintf("%s", time.Unix(miner.Data.LastSeen, 0))
+	returnStruct.CurrentHashrate = fmt.Sprintf("%.2f MH/s", miner.Data.HashRate/1000000)
+	returnStruct.ReportedHashrate = fmt.Sprintf("%.2f MH/s", miner.Data.ReportedHashRate/1000000)
+	returnStruct.MinerStatus = miner.Status
+	return returnStruct
 }

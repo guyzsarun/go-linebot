@@ -34,7 +34,7 @@ func text_handler(event linebot.Event) {
 			return_msg = user_info.print_info()
 		} else if strings.ToLower(message.Text) == "status" {
 			wallet := get_wallet()
-			resp, err := http.Get("https://eth.2miners.com/api/accounts/" + wallet)
+			resp, err := http.Get("https://api.ethermine.org/miner/:" + wallet + "/currentStats")
 			if err != nil {
 				return_msg = "Cannot get miner status"
 			}
@@ -42,7 +42,8 @@ func text_handler(event linebot.Event) {
 			body, _ := ioutil.ReadAll(resp.Body)
 			miner_status := Miner{}
 			json.Unmarshal(body, &miner_status)
-			return_msg = "Miner :" + wallet + "\n" + miner_status.print_info()
+			returnStruct := miner_status.postProcess()
+			return_msg = "Miner :" + wallet + "\n" + returnStruct.print_info()
 
 		} else {
 			return_msg = message.Text
