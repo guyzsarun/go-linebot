@@ -22,6 +22,14 @@ func load_dev_env() (string, string) {
 	return LINE_API, LINE_SECRET
 }
 
+func get_wallet() string {
+	err := godotenv.Load()
+	if err != nil {
+		log.Println("Error loading .env file")
+	}
+	return os.Getenv("ETH_WALLET")
+}
+
 func getPort() string {
 	var port = os.Getenv("PORT")
 	if port == "" {
